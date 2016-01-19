@@ -14,7 +14,9 @@ var argv = require('yargs')
     .argv;
 
 argv.catalogFile = argv._[0];
+
 var path = argv.version;
+
 var rootSchema;
 function validate() {
     var filenames = argv._;
@@ -62,27 +64,30 @@ function loadNextSchema(filename, callback) {
     fs.readFile(path + '/' + filename, 'utf8', function(err, data) {
         if (err) {
             console.log();
-            if (filename === 'Catalog.json') {
-                console.error("ERROR: We don't have a schema for version '" + argv.version + "'");
+            if (filename === 'Catalog.json' && argv.version !== 'master') {
+                console.warn("WARNING: We don't have a schema for version '" + argv.version + "'. Falling back to master.");
+                path = 'master';
+                loadNextSchema(filename, callback);
             } else {
                 console.error("ERROR: Missing file " + path + '/' + filename);
+                process.exit(1);
             }
-            process.exit(1);
-        }
-        var schema = JSON.parse(data);
-        if (!rootSchema) {
-            rootSchema = schema;
-            schema.id = '/' + filename;
         } else {
-            schema.id = filename;
-        }
-        v.addSchema(schema);
-        var next = v.unresolvedRefs.shift();
-        if (next) {
-            loadNextSchema(next, callback);
-        } else {
-            argv.quiet || console.log('Done.');
-            callback();
+            var schema = JSON.parse(data);
+            if (!rootSchema) {
+                rootSchema = schema;
+                schema.id = '/' + filename;
+            } else {
+                schema.id = filename;
+            }
+            v.addSchema(schema);
+            var next = v.unresolvedRefs.shift();
+            if (next) {
+                loadNextSchema(next, callback);
+            } else {
+                argv.quiet || console.log('Schema loaded.');
+                callback();
+            }
         }
     });
 }
