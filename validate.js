@@ -21,23 +21,28 @@ function validate() {
     var processed = 0, errors = 0;
     filenames.forEach(function(filename) {
         fs.readFile(filename, 'utf8', function(err, data) {
-            data = JSON.parse(data);
-            var result  = v.validate(data, rootSchema);
-            if (result.errors.length) {
-                process.stdout.write('FAILED: ' + filename);
-                argv.quiet || result.errors.forEach(function(error) {
-                    if (error.instance.name && error.instance.type) {
-                        // With our current schema, there is never a helpful error.message - just X didn't meet the oneOf criteria.
-                        console.error('        "' + error.instance.name + '" (' + error.instance.type + ') ');
-                    } else {
-                      console.error(error.stack);
-                      console.error('where ' + error.property + ' is: ');
-                      console.error(JSON.stringify(error.instance, undefined, 2));
-                    }
-                });
-                errors ++ ;
+            if (err) {
+                console.error("ERROR: File not found: " + filename);
+                errors ++;
             } else {
-                argv.quiet || console.log('OK:     ' + filename);
+                data = JSON.parse(data);
+                var result  = v.validate(data, rootSchema);
+                if (result.errors.length) {
+                    process.stderr.write('FAILED: ' + filename);
+                    argv.quiet || result.errors.forEach(function(error) {
+                        if (error.instance.name && error.instance.type) {
+                            // With our current schema, there is never a helpful error.message - just X didn't meet the oneOf criteria.
+                            console.error('        "' + error.instance.name + '" (' + error.instance.type + ') ');
+                        } else {
+                          console.error(error.stack);
+                          console.error('where ' + error.property + ' is: ');
+                          console.error(JSON.stringify(error.instance, undefined, 2));
+                        }
+                    });
+                    errors ++ ;
+                } else {
+                    argv.quiet || console.log('OK:     ' + filename);
+                }
             }
             if (++processed === filenames.length) {
                 done(errors);
@@ -53,8 +58,17 @@ function done(errorCount) {
     }
 }
 
-function loadNextSchema(filename) {
+function loadNextSchema(filename, callback) {
     fs.readFile(path + '/' + filename, 'utf8', function(err, data) {
+        if (err) {
+            console.log();
+            if (filename === 'Catalog.json') {
+                console.error("ERROR: We don't have a schema for version '" + argv.version + "'");
+            } else {
+                console.error("ERROR: Missing file " + path + '/' + filename);
+            }
+            process.exit(1);
+        }
         var schema = JSON.parse(data);
         if (!rootSchema) {
             rootSchema = schema;
@@ -65,12 +79,12 @@ function loadNextSchema(filename) {
         v.addSchema(schema);
         var next = v.unresolvedRefs.shift();
         if (next) {
-            loadNextSchema(next);
+            loadNextSchema(next, callback);
         } else {
             argv.quiet || console.log('Done.');
-            validate();
+            callback();
         }
     });
 }
 argv.quiet || process.stdout.write('Loading schema: ' + path + '/Catalog.json ... ');
-loadNextSchema('Catalog.json');
+loadNextSchema('Catalog.json', validate);
