@@ -4,7 +4,7 @@ var ValidatorResult = require('jsonschema').ValidatorResult;
 var fs = require('fs');
 var path = require('path');
 var defaultVersion = 'master';
-var schemaBasePath = 'schema';
+var schemaBasePath = path.join(__dirname, 'schema');
 var argv = require('yargs')
     .usage('$0 [--version <version>] <catalog.json> [<anothercatalog.json> ...]')
     .describe('version', 'Version of schema to validate against (master, x.y.z)')
