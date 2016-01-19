@@ -2,9 +2,9 @@
 var v = new (require('jsonschema').Validator)();
 var ValidatorResult = require('jsonschema').ValidatorResult;
 var fs = require('fs');
-
+var path = require('path');
 var defaultVersion = 'master';
-
+var schemaBasePath = 'schema';
 var argv = require('yargs')
     .usage('$0 [--version <version>] <catalog.json> [<anothercatalog.json> ...]')
     .describe('version', 'Version of schema to validate against (master, x.y.z)')
@@ -20,7 +20,7 @@ argv.catalogFile = argv._[0];
 
 if (argv.terriajsdir) {
     try  {
-        argv.version = require( (argv.terriajsdir.match(/^[.\/]/) ? '' : './') + argv.terriajsdir + '/package.json').version;
+        argv.version = JSON.parse(fs.readFileSync(path.join(argv.terriajsdir, 'package.json'), 'utf8')).version;
     } catch (e) {
         console.warn(e.message);
         argv.version = defaultVersion;
@@ -29,7 +29,7 @@ if (argv.terriajsdir) {
 
 }
 
-var path = argv.version;
+var schemaPath = path.join(schemaBasePath, argv.version);
 
 var rootSchema;
 function validate() {
@@ -75,15 +75,15 @@ function done(errorCount) {
 }
 
 function loadNextSchema(filename, callback) {
-    fs.readFile(path + '/' + filename, 'utf8', function(err, data) {
+    fs.readFile(path.join(schemaPath, filename), 'utf8', function(err, data) {
         if (err) {
             console.log();
             if (filename === 'Catalog.json' && argv.version !== defaultVersion) {
-                path = defaultVersion;
-                console.warn("WARNING: We don't have a schema for version '" + argv.version + "'. Falling back to '" + path + "'.");
+                schemaPath = path.join(schemaBasePath, defaultVersion);
+                console.warn("WARNING: We don't have a schema for version '" + argv.version + "'. Falling back to '" + defaultVersion + "'.");
                 loadNextSchema(filename, callback);
             } else {
-                console.error("ERROR: Missing file " + path + '/' + filename);
+                console.error("ERROR: Missing file " + path.join(schemaPath, filename));
                 process.exit(1);
             }
         } else {
@@ -105,5 +105,5 @@ function loadNextSchema(filename, callback) {
         }
     });
 }
-argv.quiet || process.stdout.write('Loading schema: ' + path + '/Catalog.json ... ');
+argv.quiet || process.stdout.write('Loading schema: ' + path.join(schemaPath, '/Catalog.json ... '));
 loadNextSchema('Catalog.json', validate);

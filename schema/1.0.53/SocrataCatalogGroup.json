@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "defaultProperties": [
+    "name",
+    "type",
+    "url"
+  ],
+  "properties": {
+    "url": {
+      "type": "string",
+      "title": "#URL",
+      "description": "The URL of the Socrata server."
+    },
+    "dataCustodian": {
+      "type": "string",
+      "title": "#Data custodian",
+      "description": "A description of the custodian of the data sources in this group.\nThis property is an HTML string that must be sanitized before display to the user."
+    },
+    "groupBy": {
+      "type": "string",
+      "title": "#Group by",
+      "description": "A value indicating how datasets should be grouped.  Valid values are:\n* `none` - Datasets are put in a flat list; they are not grouped at all.\n* `category` - Datasets are grouped according to their category in Socrata."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "socrata"
+      ],
+      "options": {
+        "hidden": true
+      }
+    }
+  },
+  "description": "A {@link CatalogGroup} representing a collection of layers from a [Socrata](http://Socrata.org) server. Only spatial layers with a defined Map \nvisualisation are shown, using WMS.",
+  "title": "Socrata Server",
+  "allOf": [
+    {
+      "$ref": "CatalogGroup.json"
+    },
+    {
+      "$ref": "CatalogMember.json"
+    }
+  ]
+}
