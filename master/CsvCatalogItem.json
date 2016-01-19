@@ -1,0 +1,62 @@
+{
+  "type": "object",
+  "defaultProperties": [
+    "name",
+    "type",
+    "url"
+  ],
+  "properties": {
+    "data": {
+      "type": "string",
+      "title": "#Data",
+      "description": "The CSV data, represented as a binary Blob, a string, or a Promise for one of those things.\nIf this property is set, {@link CatalogItem#url} is ignored."
+    },
+    "dataSourceUrl": {
+      "type": "string",
+      "title": "#Data source URL",
+      "description": "The URL from which the {@link CsvCatalogItem#data} was obtained.  This is informational; it is not\nused.  This propery is observable."
+    },
+    "opacity": {
+      "type": "number",
+      "title": "#Opacity",
+      "description": "The opacity (alpha) of the data item, where 0.0 is fully transparent and 1.0 is\nfully opaque."
+    },
+    "keepOnTop": {
+      "type": "boolean",
+      "title": "#Keep on top",
+      "description": "Keeps the layer on top of all other imagery layers.",
+      "format": "checkbox"
+    },
+    "showWarnings": {
+      "type": "boolean",
+      "title": "#Show warnings",
+      "description": "Should any warnings like failures in region mapping be displayed to the user?",
+      "format": "checkbox"
+    },
+    "disableUserChanges": {
+      "type": "boolean",
+      "title": "#Disable user changes",
+      "description": "Disable the ability to change the display of the dataset via displayVariablesConcept.",
+      "format": "checkbox"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "csv"
+      ],
+      "options": {
+        "hidden": true
+      }
+    }
+  },
+  "description": "A {@link CatalogItem} representing CSV data.",
+  "title": "Comma-Separated Values (CSV)",
+  "allOf": [
+    {
+      "$ref": "CatalogItem.json"
+    },
+    {
+      "$ref": "CatalogMember.json"
+    }
+  ]
+}

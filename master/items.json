@@ -1,0 +1,100 @@
+{
+  "title": "Items",
+  "description": "List of items or groups",
+  "type": "array",
+  "format": "tabs",
+  "items": {
+    "type": "object",
+    "title": "item",
+    "headerTemplate": "{{ self.name }}",
+    "allOf": [
+      {
+        "$ref": "CatalogMember.json"
+      }
+    ],
+    "required": [
+      "name",
+      "type"
+    ],
+    "oneOf": [
+      {
+        "$ref": "JustCatalogGroup.json"
+      },
+      {
+        "$ref": "BingMapsCatalogItem.json"
+      },
+      {
+        "$ref": "ArcGisCatalogGroup.json"
+      },
+      {
+        "$ref": "CzmlCatalogItem.json"
+      },
+      {
+        "$ref": "ArcGisMapServerCatalogItem.json"
+      },
+      {
+        "$ref": "GpxCatalogItem.json"
+      },
+      {
+        "$ref": "CswCatalogGroup.json"
+      },
+      {
+        "$ref": "MapboxMapCatalogItem.json"
+      },
+      {
+        "$ref": "CkanCatalogGroup.json"
+      },
+      {
+        "$ref": "WebMapTileServiceCatalogGroup.json"
+      },
+      {
+        "$ref": "OpenStreetMapCatalogItem.json"
+      },
+      {
+        "$ref": "KmlCatalogItem.json"
+      },
+      {
+        "$ref": "OgrCatalogItem.json"
+      },
+      {
+        "$ref": "CsvCatalogItem.json"
+      },
+      {
+        "$ref": "WebFeatureServiceCatalogItem.json"
+      },
+      {
+        "$ref": "WebMapServiceCatalogGroup.json"
+      },
+      {
+        "$ref": "UrthecastCatalogGroup.json"
+      },
+      {
+        "$ref": "SocrataCatalogGroup.json"
+      },
+      {
+        "$ref": "AbsIttCatalogGroup.json"
+      },
+      {
+        "$ref": "UrthecastCatalogItem.json"
+      },
+      {
+        "$ref": "WfsFeaturesCatalogGroup.json"
+      },
+      {
+        "$ref": "GeoJsonCatalogItem.json"
+      },
+      {
+        "$ref": "WebFeatureServiceCatalogGroup.json"
+      },
+      {
+        "$ref": "WebMapServiceCatalogItem.json"
+      },
+      {
+        "$ref": "AbsIttCatalogItem.json"
+      },
+      {
+        "$ref": "WebMapTileServiceCatalogItem.json"
+      }
+    ]
+  }
+}

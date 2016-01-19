@@ -1,0 +1,34 @@
+{
+  "type": "object",
+  "defaultProperties": [
+    "name",
+    "type",
+    "url"
+  ],
+  "properties": {
+    "dataSourceUrl": {
+      "type": "string",
+      "title": "#Data source URL",
+      "description": "The URL from which the {@link GpxCatalogItem#data} was obtained.  This may be used\nto resolve any resources linked in the Gpx file, if any."
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "gpx"
+      ],
+      "options": {
+        "hidden": true
+      }
+    }
+  },
+  "description": "A {@link CatalogItem} representing GPX data.",
+  "title": "GPX",
+  "allOf": [
+    {
+      "$ref": "CatalogItem.json"
+    },
+    {
+      "$ref": "CatalogMember.json"
+    }
+  ]
+}

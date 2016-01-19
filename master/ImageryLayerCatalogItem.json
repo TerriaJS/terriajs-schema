@@ -1,0 +1,64 @@
+{
+  "type": "object",
+  "defaultProperties": [
+    "name",
+    "type",
+    "url"
+  ],
+  "properties": {
+    "opacity": {
+      "type": [
+        "number",
+        "string"
+      ],
+      "title": "#Opacity",
+      "description": "The opacity (alpha) of the data item, where 0.0 is fully transparent and 1.0 is\nfully opaque."
+    },
+    "treat404AsError": {
+      "type": "boolean",
+      "title": "#Treat404 as error",
+      "description": "A value indicating whether a 404 response code when requesting a tile should be\ntreated as an error.  If false, 404s are assumed to just be missing tiles and need not be\nreported to the user.",
+      "format": "checkbox"
+    },
+    "treat403AsError": {
+      "type": "boolean",
+      "title": "#Treat403 as error",
+      "description": "A value indicating whether a 403 response code when requesting a tile should be\ntreated as an error.  If false, 403s are assumed to just be missing tiles and need not be\nreported to the user.",
+      "format": "checkbox"
+    },
+    "ignoreUnknownTileErrors": {
+      "type": "boolean",
+      "title": "#Ignore unknown tile errors",
+      "description": "A value indicating whether non-specific (no HTTP status code) tile errors should be ignored. This is a\nlast resort, for dealing with odd cases such as data sources that return non-images (eg XML) with a 200 status code.\nNo error messages will be shown to the user.",
+      "format": "checkbox"
+    },
+    "keepOnTop": {
+      "type": "boolean",
+      "title": "#Keep on top",
+      "description": "Keeps the layer on top of all other imagery layers.",
+      "format": "checkbox"
+    },
+    "clipToRectangle": {
+      "type": "boolean",
+      "title": "#Clip to rectangle",
+      "description": "A value indicating whether this dataset should be clipped to the {@link CatalogItem#rectangle}.\nIf true, no part of the dataset will be displayed outside the rectangle.  This property is false by default because it requires\nthat the rectangle be highly accurate.  Also, many servers report an extent that does not take into account that the representation\nof features sometimes require a larger spatial extent than the features themselves.  For example, if a point feature on the edge of\nthe extent is drawn as a circle with a radius of 5 pixels, half of that circle will be cut off.",
+      "format": "checkbox"
+    },
+    "isRequiredForRendering": {
+      "type": "boolean",
+      "title": "#Is required for rendering",
+      "description": "A value indicating whether tiles of this catalog item are required to be loaded before terrain\ntiles to which they're attached can be rendered.  This should usually be set to true for base layers and\nfalse for all others.",
+      "format": "checkbox"
+    }
+  },
+  "description": "A {@link CatalogItem} that is added to the map as a rasterized imagery layer.",
+  "title": "ImageryLayer",
+  "allOf": [
+    {
+      "$ref": "CatalogItem.json"
+    },
+    {
+      "$ref": "CatalogMember.json"
+    }
+  ]
+}
