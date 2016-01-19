@@ -3,10 +3,13 @@ var v = new (require('jsonschema').Validator)();
 var ValidatorResult = require('jsonschema').ValidatorResult;
 var fs = require('fs');
 
+var defaultVersion = 'master';
+
 var argv = require('yargs')
     .usage('$0 [--version <version>] <catalog.json> [<anothercatalog.json> ...]')
     .describe('version', 'Version of schema to validate against (master, x.y.z)')
-    .default('version', 'master')
+    .default('version', defaultVersion)
+    .describe('terriajsdir', 'Directory containing TerriaJS, to deduce version automatically.')
     .describe('quiet', 'Suppress non-error output.')
     .boolean('quiet')
     .demand(1)
@@ -14,6 +17,17 @@ var argv = require('yargs')
     .argv;
 
 argv.catalogFile = argv._[0];
+
+if (argv.terriajsdir) {
+    try  {
+        argv.version = require( (argv.terriajsdir.match(/^[.\/]/) ? '' : './') + argv.terriajsdir + '/package.json').version;
+    } catch (e) {
+        console.warn(e.message);
+        argv.version = defaultVersion;
+        console.warn('Warning: using version "' + argv.version + '".');
+    }
+
+}
 
 var path = argv.version;
 
@@ -64,9 +78,9 @@ function loadNextSchema(filename, callback) {
     fs.readFile(path + '/' + filename, 'utf8', function(err, data) {
         if (err) {
             console.log();
-            if (filename === 'Catalog.json' && argv.version !== 'master') {
-                console.warn("WARNING: We don't have a schema for version '" + argv.version + "'. Falling back to master.");
-                path = 'master';
+            if (filename === 'Catalog.json' && argv.version !== defaultVersion) {
+                path = defaultVersion;
+                console.warn("WARNING: We don't have a schema for version '" + argv.version + "'. Falling back to '" + path + "'.");
                 loadNextSchema(filename, callback);
             } else {
                 console.error("ERROR: Missing file " + path + '/' + filename);
