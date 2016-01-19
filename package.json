@@ -1,0 +1,23 @@
+{
+  "name": "terriajs-schema",
+  "version": "0.1.0",
+  "description": "JSON schema for TerriaJS.",
+  "main": "validate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TerriaJS/terriajs-schema.git"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/TerriaJS/terriajs-schema/issues"
+  },
+  "homepage": "https://github.com/TerriaJS/terriajs-schema#readme",
+  "dependencies": {
+    "jsonschema": "^1.0.3",
+    "yargs": "^3.32.0"
+  }
+}
