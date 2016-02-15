@@ -1,17 +1,17 @@
 {
   "type": "object",
-  "defaultProperties": [
-    "name",
-    "type",
-    "url"
-  ],
   "properties": {
-    "key": {
+    "type": {
+      "options": {
+        "hidden": true
+      },
       "type": "string",
-      "title": "Key",
-      "description": "The Bing Maps API key to use.  If this property is undefined,\nBingMapsApi.getKey is used."
+      "enum": [
+        "mapbox-map"
+      ]
     }
   },
+  "title": "Mapbox Map",
   "allOf": [
     {
       "$ref": "CatalogItem.json"
@@ -21,6 +21,9 @@
     },
     {
       "$ref": "CatalogMember.json"
+    },
+    {
+      "$ref": "MapboxMapCatalogItem.json"
     }
   ]
 }

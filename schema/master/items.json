@@ -7,93 +7,850 @@
     "type": "object",
     "title": "item",
     "headerTemplate": "{{ self.name }}",
-    "allOf": [
-      {
-        "$ref": "CatalogMember.json"
-      }
-    ],
     "required": [
       "name",
       "type"
     ],
-    "oneOf": [
+    "allOf": [
       {
-        "$ref": "JustCatalogGroup.json"
+        "$ref": "CatalogMember.json"
       },
       {
-        "$ref": "BingMapsCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "abs-itt-dataset-list"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "abs-itt-dataset-list"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "AbsIttCatalogGroup_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "ArcGisCatalogGroup.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "abs-itt"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "abs-itt"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "AbsIttCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "CzmlCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "esri-mapServer-group"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "esri-mapServer-group"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "ArcGisCatalogGroup_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "ArcGisMapServerCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "esri-mapServer"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "esri-mapServer"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "ArcGisMapServerCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "GpxCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "bing-maps"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "bing-maps"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "BingMapsCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "CswCatalogGroup.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "group"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "group"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "CatalogGroup_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "MapboxMapCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "ckan"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "ckan"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "CkanCatalogGroup_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "CkanCatalogGroup.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "ckan-resource"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "ckan-resource"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "CkanCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "WebMapTileServiceCatalogGroup.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "csv"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "csv"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "CsvCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "OpenStreetMapCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "csw"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "csw"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "CswCatalogGroup_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "KmlCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "czml"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "czml"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "CzmlCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "OgrCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "geojson"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "geojson"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "GeoJsonCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "CsvCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "gpx"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "gpx"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "GpxCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "WebFeatureServiceCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "kml"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "kml"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "KmlCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "WebMapServiceCatalogGroup.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "mapbox-map"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "mapbox-map"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "MapboxMapCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "UrthecastCatalogGroup.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "ogr"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "ogr"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "OgrCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "SocrataCatalogGroup.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "open-street-map"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "open-street-map"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "OpenStreetMapCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "AbsIttCatalogGroup.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "socrata"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "socrata"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "SocrataCatalogGroup_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "UrthecastCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "urthecast-group"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "urthecast-group"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "UrthecastCatalogGroup_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "WfsFeaturesCatalogGroup.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "urthecast"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "urthecast"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "UrthecastCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "GeoJsonCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "wfs-getCapabilities"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "wfs-getCapabilities"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "WebFeatureServiceCatalogGroup_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "WebFeatureServiceCatalogGroup.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "wfs"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "wfs"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "WebFeatureServiceCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "WebMapServiceCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "wms-getCapabilities"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "wms-getCapabilities"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "WebMapServiceCatalogGroup_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "AbsIttCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "wms"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "wms"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "WebMapServiceCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
       },
       {
-        "$ref": "WebMapTileServiceCatalogItem.json"
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "wmts-getCapabilities"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "wmts-getCapabilities"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "WebMapTileServiceCatalogGroup_type.json"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "wmts"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "wmts"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "WebMapTileServiceCatalogItem_type.json"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "oneOf": [
+          {
+            "not": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "wfs-features-group"
+                  ]
+                }
+              }
+            }
+          },
+          {
+            "allOf": [
+              {
+                "properties": {
+                  "type": {
+                    "enum": [
+                      "wfs-features-group"
+                    ]
+                  }
+                }
+              },
+              {
+                "$ref": "WfsFeaturesCatalogGroup_type.json"
+              }
+            ]
+          }
+        ]
       }
     ]
   }

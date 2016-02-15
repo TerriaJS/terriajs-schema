@@ -8,21 +8,10 @@
   "properties": {
     "dataSourceUrl": {
       "type": "string",
-      "title": "#Data source URL",
-      "description": "The URL from which the {@link OgrCatalogItem#data} was obtained.  This may be used\nto resolve any resources linked in the Ogr file, if any."
-    },
-    "type": {
-      "type": "string",
-      "enum": [
-        "ogr"
-      ],
-      "options": {
-        "hidden": true
-      }
+      "title": "Data source URL",
+      "description": "The URL from which the OgrCatalogItem's data was obtained.  This may be used\nto resolve any resources linked in the Ogr file, if any."
     }
   },
-  "description": "A {@link CatalogItem} representing ogr2ogr supported data formats.",
-  "title": "Unknown / Converted to GeoJSON",
   "allOf": [
     {
       "$ref": "CatalogItem.json"

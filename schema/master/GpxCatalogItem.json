@@ -8,21 +8,10 @@
   "properties": {
     "dataSourceUrl": {
       "type": "string",
-      "title": "#Data source URL",
-      "description": "The URL from which the {@link GpxCatalogItem#data} was obtained.  This may be used\nto resolve any resources linked in the Gpx file, if any."
-    },
-    "type": {
-      "type": "string",
-      "enum": [
-        "gpx"
-      ],
-      "options": {
-        "hidden": true
-      }
+      "title": "Data source URL",
+      "description": "The URL from which the GpxCatalogItem's data was obtained.  This may be used\nto resolve any resources linked in the Gpx file, if any."
     }
   },
-  "description": "A {@link CatalogItem} representing GPX data.",
-  "title": "GPX",
   "allOf": [
     {
       "$ref": "CatalogItem.json"
