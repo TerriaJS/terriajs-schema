@@ -2,89 +2,77 @@
 
 var v = new (require('jsonschema').Validator)();
 var ValidatorResult = require('jsonschema').ValidatorResult;
-var fs = require('fs');
+var when = require('when');
+var node = require('when/node');
+var fn = require('when/function');
+var fsp = node.liftAll(require('fs'));
 var path = require('path');
 var defaultVersion = 'master';
 var schemaBasePath = path.join(__dirname, 'schema');
-var argv;
-var schemaPath = argv.schemadir || path.join(schemaBasePath, argv.version);
+var argv, schemaPath;
 var rootSchema;
 
-function validate() {
-    var filenames = argv._;
-    var processed = 0, errors = 0;
-    filenames.forEach(function(filename) {
-        fs.readFile(filename, 'utf8', function(err, data) {
-            if (err) {
-                console.error("ERROR: File not found: " + filename);
-                errors ++;
-            } else {
-                data = JSON.parse(data);
-                var result  = v.validate(data, rootSchema, {/*throwError: true*/});
-                if (result.errors.length) {
-                    var pad = '  ';
-                    console.error('FAILED: ' + filename + ':' );
-                    argv.quiet || result.errors.forEach(function(error) {
-                        // Now the delicate art of trying to guess which errors are meaningful and which are just spam.
-                        // We suppress "meta-errors", assuming that a useful error is deeper in the tree.
-                        if (['allOf','anyOf','not','oneOf'].indexOf(error.name) === -1) {
-                          console.error(pad + error.name + ' ' +  error.stack);
-                          console.error(pad + 'where ' + error.property + ' is ' + JSON.stringify(error.instance).slice(0,160));
-                        }
-                    });
-                    errors ++ ;
-                } else {
-                    argv.quiet || console.log('OK:     ' + filename);
+var readFile = function(filename){ return fsp.readFile(filename, 'utf8'); };
+
+function validate(filenames) {
+    var processed = 0, errors = 0, pad = '  ';
+    when.map(when.map(filenames, readFile), function(fileContent, i) {
+        var result  = v.validate(JSON.parse(fileContent), rootSchema, {/*throwError: true*/});
+        if (result.errors.length) {
+            console.error('FAILED: ' + filenames[i] + ':' );
+            argv.quiet || result.errors.forEach(function(error) {
+                // Now the delicate art of trying to guess which errors are meaningful and which are just spam.
+                // We suppress "meta-errors", assuming that a useful error is deeper in the tree.
+                if (['allOf','anyOf','not','oneOf'].indexOf(error.name) === -1) {
+                  console.error(pad + error.name + ' ' +  error.stack);
+                  console.error(pad + 'where ' + error.property + ' is ' + JSON.stringify(error.instance).slice(0,160));
                 }
-            }
-            if (++processed === filenames.length) {
-                done(errors);
-            }
-        });
+            });
+            errors ++;
+        } else {
+            argv.quiet || console.log('OK:     ' + filenames[i]);
+        }
+    }).then(function() { 
+        if (errors > 0) {
+            console.log(errors + ' catalog files failed validation.');
+        }
+        return errors;
+    }).catch(function(err) {
+        console.error("FATAL ERROR: Problem loading file: " + err.message);
     });
 }
 
-function done(errorCount) {
-    if (errorCount > 0) {
-        console.log(errorCount + ' catalog files failed validation.');
-        process.exit(1);
-    }
-}
-
-function loadNextSchema(filename, callback) {
-    fs.readFile(path.join(schemaPath, filename), 'utf8', function(err, data) {
-        if (err) {
-            console.log();
-            if (filename === 'Catalog.json' && argv.version !== defaultVersion) {
-                schemaPath = path.join(schemaBasePath, defaultVersion);
-                console.warn("WARNING: We don't have a schema for version '" + argv.version + "'. Falling back to '" + defaultVersion + "'.");
-                loadNextSchema(filename, callback);
-            } else {
-                console.error("ERROR: Missing file " + path.join(schemaPath, filename));
-                process.exit(1);
-            }
+function loadNextSchema(filename) {
+    return readFile(path.join(schemaPath, filename)).then(function(data) {
+        var schema = JSON.parse(data);
+        if (!rootSchema) {
+            rootSchema = schema;
+            schema.id = '/' + filename;
         } else {
-            var schema = JSON.parse(data);
-            if (!rootSchema) {
-                rootSchema = schema;
-                schema.id = '/' + filename;
-            } else {
-                schema.id = filename;
-            }
-            v.addSchema(schema);
-            var next = v.unresolvedRefs.shift();
-            if (next) {
-                loadNextSchema(next, callback);
-            } else {
-                argv.quiet || console.log('Schema loaded.');
-                callback();
-            }
+            schema.id = filename;
+        }
+        v.addSchema(schema);
+        var next = v.unresolvedRefs.shift();
+        if (next) {
+            return loadNextSchema(next);
+        } else {
+            argv.quiet || console.log('Schema loaded.');
+        }
+    }).catch(function(err) {
+        console.log(err);
+        if (filename === 'Catalog.json' && argv.version !== defaultVersion) {
+            schemaPath = path.join(schemaBasePath, defaultVersion);
+            console.warn("\nWARNING: We don't have a schema for version '" + argv.version + "'. Falling back to '" + defaultVersion + "'.");
+            return loadNextSchema(filename);
+        } else {
+            throw Error("\nERROR: Missing file " + path.join(schemaPath, filename));
         }
     });
 }
 
 module.exports = function(options) {
     argv = options;
+    schemaPath = argv.schemadir || path.join(schemaBasePath, argv.version);
     if (argv.terriajsdir) {
         try  {
             argv.version = JSON.parse(fs.readFileSync(path.join(argv.terriajsdir, 'package.json'), 'utf8')).version;
@@ -95,5 +83,8 @@ module.exports = function(options) {
         }
     }
     argv.quiet || process.stdout.write('Loading schema: ' + path.join(schemaPath, '/Catalog.json ... '));
-    loadNextSchema('Catalog.json', validate);
+    return loadNextSchema('Catalog.json').then(function() { 
+        validate(argv._);
+    });
 };
+module.exports.defaultVersion = defaultVersion;

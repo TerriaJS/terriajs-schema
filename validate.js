@@ -1,8 +1,9 @@
 #!/usr/bin/env node
+var validateSchema = require('./validateSchema');
 var argv = require('yargs')
     .usage('$0 [--version <version>] <catalog.json> [<anothercatalog.json> ...]')
     .describe('version', 'Version of schema to validate against (master, x.y.z)')
-    .default('version', defaultVersion)
+    .default('version', validateSchema.defaultVersion)
     .describe('terriajsdir', 'Directory containing TerriaJS, to deduce version automatically.')
     .describe('quiet', 'Suppress non-error output.')
     .describe('schemadir', 'Path to the exact schema dir, to skip all schema detection logic.')
@@ -13,4 +14,4 @@ var argv = require('yargs')
 
 argv.catalogFile = argv._[0];
 
-require('./validateSchema')(argv);
+validateSchema(argv);
