@@ -11,6 +11,7 @@ var argv = require('yargs')
     .default('version', defaultVersion)
     .describe('terriajsdir', 'Directory containing TerriaJS, to deduce version automatically.')
     .describe('quiet', 'Suppress non-error output.')
+    .describe('schemadir', 'Path to the exact schema dir, to skip all schema detection logic.')
     .boolean('quiet')
     .demand(1)
     .help('help')
@@ -29,7 +30,7 @@ if (argv.terriajsdir) {
 
 }
 
-var schemaPath = path.join(schemaBasePath, argv.version);
+var schemaPath = argv.schemadir || path.join(schemaBasePath, argv.version);
 
 var rootSchema;
 function validate() {
@@ -42,17 +43,16 @@ function validate() {
                 errors ++;
             } else {
                 data = JSON.parse(data);
-                var result  = v.validate(data, rootSchema);
+                var result  = v.validate(data, rootSchema, {/*throwError: true*/});
                 if (result.errors.length) {
-                    process.stderr.write('FAILED: ' + filename);
+                    var pad = '  ';
+                    console.error('FAILED: ' + filename + ':' );
                     argv.quiet || result.errors.forEach(function(error) {
-                        if (error.instance.name && error.instance.type) {
-                            // With our current schema, there is never a helpful error.message - just X didn't meet the oneOf criteria.
-                            console.error('        "' + error.instance.name + '" (' + error.instance.type + ') ');
-                        } else {
-                          console.error(error.stack);
-                          console.error('where ' + error.property + ' is: ');
-                          console.error(JSON.stringify(error.instance, undefined, 2));
+                        // Now the delicate art of trying to guess which errors are meaningful and which are just spam.
+                        // We suppress "meta-errors", assuming that a useful error is deeper in the tree.
+                        if (['allOf','anyOf','not','oneOf'].indexOf(error.name) === -1) {
+                          console.error(pad + error.name + ' ' +  error.stack);
+                          console.error(pad + 'where ' + error.property + ' is ' + JSON.stringify(error.instance).slice(0,160));
                         }
                     });
                     errors ++ ;
