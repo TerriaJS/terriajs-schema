@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "defaultProperties": [
+    "name",
+    "type",
+    "url"
+  ],
+  "properties": {
+    "key": {
+      "type": "string",
+      "title": "Key",
+      "description": "The Bing Maps API key to use.  If this property is undefined,\n{@link BingMapsApi.getKey} is used."
+    }
+  },
+  "description": "A {@link ImageryLayerCatalogItem} representing a layer from the Bing Maps server.",
+  "title": "Bing Maps",
+  "allOf": [
+    {
+      "$ref": "CatalogItem.json"
+    },
+    {
+      "$ref": "ImageryLayerCatalogItem.json"
+    },
+    {
+      "$ref": "CatalogMember.json"
+    }
+  ]
+}

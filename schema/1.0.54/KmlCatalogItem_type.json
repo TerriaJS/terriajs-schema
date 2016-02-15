@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "properties": {
+    "type": {
+      "options": {
+        "hidden": true
+      },
+      "type": "string",
+      "enum": [
+        "kml"
+      ]
+    }
+  },
+  "description": "A {@link CatalogItem} representing KML or KMZ feature data.",
+  "title": "KML or KMZ",
+  "allOf": [
+    {
+      "$ref": "CatalogItem.json"
+    },
+    {
+      "$ref": "CatalogMember.json"
+    },
+    {
+      "$ref": "KmlCatalogItem.json"
+    }
+  ]
+}

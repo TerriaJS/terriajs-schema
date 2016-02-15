@@ -1,0 +1,35 @@
+{
+  "type": "object",
+  "defaultProperties": [
+    "name",
+    "type",
+    "url"
+  ],
+  "properties": {
+    "typeNames": {
+      "type": "string",
+      "title": "Type names",
+      "description": "The WFS feature type names."
+    },
+    "requestGeoJson": {
+      "type": "boolean",
+      "title": "Request geo JSON",
+      "description": "A value indicating whether we should request GeoJSON from the WFS server.  If this property\nand WebFeatureServiceCatalogItem's requestGeoJson are both true, we'll request GeoJSON first and\nonly fall back on trying GML if the GeoJSON request fails.",
+      "format": "checkbox"
+    },
+    "requestGml": {
+      "type": "boolean",
+      "title": "Request gml",
+      "description": "A value indicating whether we should request GML from the WFS server.  If this property\nand WebFeatureServiceCatalogItem's requestGeoJson are both true, we'll request GeoJSON first and\nonly fall back on trying GML if the GeoJSON request fails.",
+      "format": "checkbox"
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "CatalogItem.json"
+    },
+    {
+      "$ref": "CatalogMember.json"
+    }
+  ]
+}

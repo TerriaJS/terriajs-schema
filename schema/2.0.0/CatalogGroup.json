@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "defaultProperties": [
+    "name",
+    "type",
+    "url"
+  ],
+  "properties": {
+    "isOpen": {
+      "type": "boolean",
+      "title": "Is open",
+      "description": "A value indicating whether the group is currently expanded and showing\nits children.",
+      "format": "checkbox"
+    },
+    "isLoading": {
+      "type": "boolean",
+      "title": "Is loading",
+      "description": "A value indicating whether the group is currently loading.  This property\nis observable.",
+      "format": "checkbox"
+    }
+  },
+  "allOf": [
+    {
+      "$ref": "CatalogMember.json"
+    }
+  ]
+}

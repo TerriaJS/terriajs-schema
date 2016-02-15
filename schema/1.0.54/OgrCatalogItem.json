@@ -1,0 +1,25 @@
+{
+  "type": "object",
+  "defaultProperties": [
+    "name",
+    "type",
+    "url"
+  ],
+  "properties": {
+    "dataSourceUrl": {
+      "type": "string",
+      "title": "Data source URL",
+      "description": "The URL from which the {@link OgrCatalogItem#data} was obtained.  This may be used\nto resolve any resources linked in the Ogr file, if any."
+    }
+  },
+  "description": "A {@link CatalogItem} representing ogr2ogr supported data formats.",
+  "title": "Unknown / Converted to GeoJSON",
+  "allOf": [
+    {
+      "$ref": "CatalogItem.json"
+    },
+    {
+      "$ref": "CatalogMember.json"
+    }
+  ]
+}

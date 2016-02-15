@@ -1,0 +1,29 @@
+{
+  "type": "object",
+  "defaultProperties": [
+    "name",
+    "type",
+    "url"
+  ],
+  "properties": {
+    "blacklist": {
+      "type": "object",
+      "title": "Blacklist",
+      "description": "A hash of names of blacklisted data layers.  A layer that appears in this hash\nwill not be shown to the user.  In this hash, the keys should be the Title of the layers to blacklist,\nand the values should be \"true\".",
+      "additionalProperties": {
+        "type": "boolean",
+        "format": "checkbox"
+      }
+    }
+  },
+  "description": "A {@link CatalogGroup} representing a collection of avalible Urthecast sensor platforms.",
+  "title": "Urthcast Sensor Platforms",
+  "allOf": [
+    {
+      "$ref": "CatalogGroup.json"
+    },
+    {
+      "$ref": "CatalogMember.json"
+    }
+  ]
+}
