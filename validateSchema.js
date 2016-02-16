@@ -1,11 +1,13 @@
-/*jshint -W030 */
+"use strict";
+/*jshint -W030, node:true*/
 
 var v = new (require('jsonschema').Validator)();
 var ValidatorResult = require('jsonschema').ValidatorResult;
 var when = require('when');
 var node = require('when/node');
 var fn = require('when/function');
-var fsp = node.liftAll(require('fs'));
+var fs = require('fs');
+var fsp = node.liftAll(fs);
 var path = require('path');
 var defaultVersion = 'master';
 var schemaBasePath = path.join(__dirname, 'schema');
@@ -16,16 +18,16 @@ var readFile = function(filename){ return fsp.readFile(filename, 'utf8'); };
 
 function validate(filenames) {
     var processed = 0, errors = 0, pad = '  ';
-    when.map(when.map(filenames, readFile), function(fileContent, i) {
-        var result  = v.validate(JSON.parse(fileContent), rootSchema, {/*throwError: true*/});
+    return when.map(when.map(filenames, readFile), function(fileContent, i) {
+        var result  = v.validate(JSON.parse(fileContent), rootSchema);
         if (result.errors.length) {
             console.error('FAILED: ' + filenames[i] + ':' );
-            argv.quiet || result.errors.forEach(function(error) {
+            result.errors.forEach(function(error) {
                 // Now the delicate art of trying to guess which errors are meaningful and which are just spam.
                 // We suppress "meta-errors", assuming that a useful error is deeper in the tree.
                 if (['allOf','anyOf','not','oneOf'].indexOf(error.name) === -1) {
                   console.error(pad + error.name + ' ' +  error.stack);
-                  console.error(pad + 'where ' + error.property + ' is ' + JSON.stringify(error.instance).slice(0,160));
+                  console.error(pad + '  Value: ' + JSON.stringify(error.instance).slice(0,160));
                 }
             });
             errors ++;
@@ -39,6 +41,7 @@ function validate(filenames) {
         return errors;
     }).catch(function(err) {
         console.error("FATAL ERROR: Problem loading file: " + err.message);
+        return 1;
     });
 }
 
@@ -69,9 +72,14 @@ function loadNextSchema(filename) {
         }
     });
 }
-
+/**
+ * Runs validation for a number of files.
+ * @param  {Object} options yargs values
+ * @return {Object}         Promise for the number of validation errors.
+ */
 module.exports = function(options) {
     argv = options;
+    argv.version = argv.version || defaultVersion;
     schemaPath = argv.schemadir || path.join(schemaBasePath, argv.version);
     if (argv.terriajsdir) {
         try  {
@@ -84,7 +92,7 @@ module.exports = function(options) {
     }
     argv.quiet || process.stdout.write('Loading schema: ' + path.join(schemaPath, '/Catalog.json ... '));
     return loadNextSchema('Catalog.json').then(function() { 
-        validate(argv._);
+        return validate(argv._);
     });
 };
 module.exports.defaultVersion = defaultVersion;

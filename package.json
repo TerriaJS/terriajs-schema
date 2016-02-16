@@ -2,7 +2,7 @@
   "name": "terriajs-schema",
   "version": "0.3.0",
   "description": "JSON schema for TerriaJS.",
-  "main": "validate.js",
+  "main": "validateSchema.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
