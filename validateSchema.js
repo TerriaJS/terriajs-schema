@@ -17,18 +17,23 @@ var rootSchema;
 var readFile = function(filename){ return fsp.readFile(filename, 'utf8'); };
 
 function validate(filenames) {
+    function isUsefulError(error) {
+        // Now the delicate art of trying to guess which errors are meaningful and which are just spam.
+        // We suppress "meta-errors", assuming that a useful error is deeper in the tree.
+        return ['allOf','anyOf','not','oneOf'].indexOf(error.name) === -1;
+    }
     var processed = 0, errors = 0, pad = '  ';
     return when.map(when.map(filenames, readFile), function(fileContent, i) {
         var result  = v.validate(JSON.parse(fileContent), rootSchema);
         if (result.errors.length) {
             console.error('FAILED: ' + filenames[i] + ':' );
-            result.errors.forEach(function(error) {
-                // Now the delicate art of trying to guess which errors are meaningful and which are just spam.
-                // We suppress "meta-errors", assuming that a useful error is deeper in the tree.
-                if (['allOf','anyOf','not','oneOf'].indexOf(error.name) === -1) {
-                  console.error(pad + error.name + ' ' +  error.stack);
-                  console.error(pad + '  Value: ' + JSON.stringify(error.instance).slice(0,160));
-                }
+            var shownErrors = result.errors.filter(isUsefulError);
+            if (!shownErrors.length) {
+                shownErrors = result.errors;
+            }
+            shownErrors.forEach(function(error) {
+              console.error(pad + error.name + ' ' +  error.stack);
+              console.error(pad + '  Value: ' + JSON.stringify(error.instance).slice(0,160));
             });
             errors ++;
         } else {
@@ -83,7 +88,6 @@ module.exports = function(options) {
     if (argv.terriajsdir) {
         try  {
             argv.version = JSON.parse(fs.readFileSync(path.join(argv.terriajsdir, 'package.json'), 'utf8')).version;
-            console.log(argv.version);
         } catch (e) {
             console.warn(e.message);
             argv.version = defaultVersion;
