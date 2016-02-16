@@ -1,6 +1,6 @@
 {
   "name": "terriajs-schema",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "JSON schema for TerriaJS.",
   "main": "validateSchema.js",
   "scripts": {
