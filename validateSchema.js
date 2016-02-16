@@ -85,6 +85,7 @@ function loadNextSchema(filename) {
 module.exports = function(options) {
     argv = options;
     argv.version = argv.version || defaultVersion;
+    !argv.quiet && console.log('TerriaJS-Schema validator v' + require('./package.json').version);
     if (argv.terriajsdir) {
         try  {
             argv.version = JSON.parse(fs.readFileSync(path.join(argv.terriajsdir, 'package.json'), 'utf8')).version;
