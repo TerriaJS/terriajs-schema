@@ -80,16 +80,17 @@ function loadNextSchema(filename) {
 module.exports = function(options) {
     argv = options;
     argv.version = argv.version || defaultVersion;
-    schemaPath = argv.schemadir || path.join(schemaBasePath, argv.version);
     if (argv.terriajsdir) {
         try  {
             argv.version = JSON.parse(fs.readFileSync(path.join(argv.terriajsdir, 'package.json'), 'utf8')).version;
+            console.log(argv.version);
         } catch (e) {
             console.warn(e.message);
             argv.version = defaultVersion;
             console.warn('Warning: using version "' + argv.version + '".');
         }
     }
+    schemaPath = argv.schemadir || path.join(schemaBasePath, argv.version);
     argv.quiet || process.stdout.write('Loading schema: ' + path.join(schemaPath, '/Catalog.json ... '));
     return loadNextSchema('Catalog.json').then(function() { 
         return validate(argv._);
